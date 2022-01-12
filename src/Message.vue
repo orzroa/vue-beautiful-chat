@@ -169,12 +169,6 @@ export default {
   text-align: center;
 }
 
-@media (max-width: 450px) {
-  .sc-message {
-    width: 80%;
-  }
-}
-
 .tooltip {
   display: block !important;
   z-index: 10000;

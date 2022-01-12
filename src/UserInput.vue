@@ -180,7 +180,7 @@ export default {
       this.inputActive = onoff
     },
     handleKey(event) {
-      if (event.keyCode === 13 && !event.shiftKey) {
+      if (event.keyCode === 13 && event.altKey) {
         if (!this.isEditing) {
           this._submitText(event)
         } else {
@@ -224,7 +224,7 @@ export default {
       if (file) {
         this._submitTextWhenFile(event, text, file)
       } else {
-        if (text && text.length > 0) {
+        if (text && text.trim().length > 0) {
           this._checkSubmitSuccess(
             this.onSubmit({
               author: 'me',

@@ -37,6 +37,7 @@ export default {
   font-size: 14px;
   line-height: 1.4;
   -webkit-font-smoothing: subpixel-antialiased;
+  max-width: 50%;
 }
 
 .sc-message--content.sent .sc-message--file {
