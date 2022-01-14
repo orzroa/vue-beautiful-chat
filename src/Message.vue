@@ -1,5 +1,5 @@
 <template>
-  <div :id="message.id" class="sc-message">
+  <div :id="message.id" class="sc-message" :title="messageTitle">
     <div
       class="sc-message--content"
       :class="{
@@ -114,6 +114,13 @@ export default {
       return {
         color: this.colors.sentMessage.text,
         backgroundColor: this.colors.sentMessage.bg
+      }
+    },
+    messageTitle() {
+      if (this.message.timeStamp) {
+        return new Date(this.message.timeStamp)
+      } else {
+        return ''
       }
     }
   }
