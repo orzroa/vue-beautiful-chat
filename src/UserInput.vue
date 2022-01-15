@@ -201,7 +201,7 @@ export default {
       })
     },
     _submitSuggestion(suggestion) {
-      this.onSubmit({author: 'me', type: 'text', data: {text: suggestion}})
+      this.onSubmit({author: 'me', type: 'text', data: {text: suggestion, sent: false}})
     },
     _checkSubmitSuccess(success) {
       if (Promise !== undefined) {
@@ -229,7 +229,7 @@ export default {
             this.onSubmit({
               author: 'me',
               type: 'text',
-              data: {text}
+              data: {text, sent: false}
             })
           )
         }
@@ -241,7 +241,7 @@ export default {
           this.onSubmit({
             author: 'me',
             type: 'file',
-            data: {text, file}
+            data: {text, file, sent: false}
           })
         )
       } else {
@@ -249,7 +249,7 @@ export default {
           this.onSubmit({
             author: 'me',
             type: 'file',
-            data: {file}
+            data: {file, sent: false}
           })
         )
       }
@@ -271,7 +271,7 @@ export default {
         this.onSubmit({
           author: 'me',
           type: 'emoji',
-          data: {emoji}
+          data: {emoji, sent: false}
         })
       )
     },

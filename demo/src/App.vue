@@ -19,11 +19,13 @@
       :show-typing-indicator="showTypingIndicator"
       :show-edition="true"
       :show-deletion="true"
+      :show-sent="true"
       :title-image-url="titleImageUrl"
       :disable-user-list-toggle="false"
       @onType="handleOnType"
       @edit="editMessage"
       @remove="removeMessage"
+      @resend="resendMessage"
     >
       <template v-slot:text-message-toolbox="scopedProps">
         <button
@@ -205,6 +207,10 @@ export default {
         m.type = 'system'
         m.data.text = 'This message has been removed'
       }
+    },
+    resendMessage(message) {
+      const m = this.messageList.find((m) => m.id === message.id)
+      m.data.sent = true
     },
     like(id) {
       const m = this.messageList.findIndex((m) => m.id === id)

@@ -1,22 +1,16 @@
 <template>
   <div class="sc-message--file" :style="messageColors">
     <div class="sc-message--file-icon">
-      <img
-        v-if="imageExtension.has(data.file.url.split('?')[0].split('.').pop())"
-        :src="data.file.url"
-        class="sc-image"
-      />
+      <img v-if="isImage" :src="data.file.url" class="sc-image" />
     </div>
     <div class="sc-message--file-name" :style="messageColors">
       <a :href="data.file.url ? data.file.url : '#'" target="_blank">{{ data.file.name || '' }}</a>
     </div>
-    <div v-if="data.text" class="sc-message--file-text" :style="messageColors">
+    <div
+      :class="['sc-message--file-text', {'sc-message--file-text-empty': !data.text}]"
+      :style="messageColors"
+    >
       {{ data.text }}
-      <p v-if="data.meta" class="sc-message--meta" :style="messageColors">
-        {{ data.meta }}
-      </p>
-    </div>
-    <div v-if="!data.text" :style="messageColors">
       <p v-if="data.meta" class="sc-message--meta" :style="messageColors">
         {{ data.meta }}
       </p>
@@ -39,6 +33,15 @@ export default {
   data() {
     return {
       imageExtension: new Set(['gif', 'jpg', 'jpeg', 'png'])
+    }
+  },
+  computed: {
+    isImage() {
+      if (this.data && this.data.file && this.data.file.url) {
+        return this.imageExtension.has(this.data.file.url.split('?')[0].split('.').pop())
+      } else {
+        return false
+      }
     }
   }
 }
@@ -79,6 +82,10 @@ export default {
   line-height: 1.4;
   white-space: pre-wrap;
   -webkit-font-smoothing: subpixel-antialiased;
+}
+
+.sc-message--file-text-empty {
+  padding: 0px 20px;
 }
 
 .sc-message--file-name {

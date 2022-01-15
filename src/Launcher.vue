@@ -32,6 +32,7 @@
       @onType="$emit('onType')"
       @edit="$emit('edit', $event)"
       @remove="$emit('remove', $event)"
+      @resend="$emit('resend', $event)"
     >
       <template v-slot:header>
         <slot name="header"> </slot>
@@ -96,6 +97,10 @@ export default {
       default: false
     },
     showDeletion: {
+      type: Boolean,
+      default: false
+    },
+    showSent: {
       type: Boolean,
       default: false
     },

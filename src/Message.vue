@@ -57,16 +57,37 @@
         <slot name="system-message-body" :message="message.data"> </slot>
       </SystemMessage>
     </div>
+    <template>
+      <div v-if="showSent && message.author === 'me'" class="sc-message--toolbox">
+        <IconBase
+          v-if="message.data.sent"
+          :color="messageColors.backgroundColor"
+          width="10"
+          icon-name="sent"
+        >
+          <IconSent />
+        </IconBase>
+        <button v-else @click="$emit('resend')">
+          <IconBase color="red" width="24" view-box="0 0 24 24" icon-name="resend">
+            <IconResend />
+          </IconBase>
+        </button>
+      </div>
+    </template>
   </div>
 </template>
 
 <script>
+import {mapState} from './store/'
 import TextMessage from './messages/TextMessage.vue'
 import FileMessage from './messages/FileMessage.vue'
 import EmojiMessage from './messages/EmojiMessage.vue'
 import TypingMessage from './messages/TypingMessage.vue'
 import SystemMessage from './messages/SystemMessage.vue'
 import chatIcon from './assets/chat-icon.svg'
+import IconBase from './components/IconBase.vue'
+import IconSent from './components/icons/IconSent.vue'
+import IconResend from './components/icons/IconResend.vue'
 
 export default {
   components: {
@@ -74,7 +95,10 @@ export default {
     FileMessage,
     EmojiMessage,
     TypingMessage,
-    SystemMessage
+    SystemMessage,
+    IconBase,
+    IconSent,
+    IconResend
   },
   props: {
     message: {
@@ -122,7 +146,8 @@ export default {
       } else {
         return ''
       }
-    }
+    },
+    ...mapState(['showSent'])
   }
 }
 </script>
@@ -138,6 +163,31 @@ export default {
     word-wrap: normal;
     font-size: xx-small;
     text-align: center;
+  }
+  .sc-message--toolbox {
+    transition: left 0.2s ease-out 0s;
+    white-space: normal;
+    opacity: 1;
+    position: flex;
+    left: 0px;
+    width: 25px;
+    top: 0;
+    button {
+      background: none;
+      border: none;
+      padding: 0px;
+      margin: 0px;
+      outline: none;
+      width: 100%;
+      text-align: center;
+      cursor: pointer;
+      &:focus {
+        outline: none;
+      }
+    }
+    & /deep/ svg {
+      margin-left: 5px;
+    }
   }
 }
 
