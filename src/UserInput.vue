@@ -230,7 +230,7 @@ export default {
         })
       }
 
-      if (file.length == 0) {
+      if (file.length > 0) {
         this._submitTextWhenFile(event, text, file)
       } else {
         if (text && text.trim().length > 0) {
