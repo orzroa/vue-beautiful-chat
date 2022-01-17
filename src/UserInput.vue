@@ -220,8 +220,17 @@ export default {
     },
     _submitText(event) {
       const text = this.$refs.userInput.textContent
-      const file = this.file
-      if (file) {
+      var file = []
+      if (this.file) {
+        file.push(this.file)
+      }
+      if (this.$refs.userInput.getElementsByTagName('img')) {
+        this.$refs.userInput.getElementsByTagName('img').forEach((e) => {
+          file.push(e.src)
+        })
+      }
+
+      if (file.length == 0) {
         this._submitTextWhenFile(event, text, file)
       } else {
         if (text && text.trim().length > 0) {
