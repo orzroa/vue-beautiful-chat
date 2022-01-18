@@ -224,11 +224,7 @@ export default {
       if (this.file) {
         file.push(this.file)
       }
-      if (this.$refs.userInput.getElementsByTagName('img')) {
-        this.$refs.userInput.getElementsByTagName('img').forEach((e) => {
-          file.push(e.src)
-        })
-      }
+      file.push(...this.$refs.userInput.getElementsByTagName('img'))
 
       if (file.length > 0) {
         this._submitTextWhenFile(event, text, file)
