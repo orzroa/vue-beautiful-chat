@@ -12,6 +12,11 @@
             <IconCross />
           </IconBase>
         </button>
+        <button v-if="showCopy && me && message.id" @click="copy">
+          <IconBase :color="messageColors.color" width="10" icon-name="copy" view-box="0 0 20 20">
+            <IconCopy />
+          </IconBase>
+        </button>
         <slot name="text-message-toolbox" :message="message" :me="me"> </slot>
       </div>
     </template>
@@ -35,6 +40,7 @@ import {mapState} from '../store/'
 import IconBase from './../components/IconBase.vue'
 import IconEdit from './../components/icons/IconEdit.vue'
 import IconCross from './../components/icons/IconCross.vue'
+import IconCopy from './../components/icons/IconCopy.vue'
 import escapeGoat from 'escape-goat'
 import Autolinker from 'autolinker'
 import store from '../store/'
@@ -45,7 +51,8 @@ export default {
   components: {
     IconBase,
     IconCross,
-    IconEdit
+    IconEdit,
+    IconCopy
   },
   props: {
     message: {
@@ -76,11 +83,20 @@ export default {
     isEditing() {
       return (store.state.editMessage && store.state.editMessage.id) === this.message.id
     },
-    ...mapState(['showDeletion', 'showEdition'])
+    ...mapState(['showDeletion', 'showEdition', 'showCopy'])
   },
   methods: {
     edit() {
       store.setState('editMessage', this.message)
+    },
+    //复制实例id
+    copy(row) {
+      let oInput = document.createElement('input')
+      oInput.value = this.message.data.text
+      document.body.appendChild(oInput)
+      oInput.select() // 选择对象
+      document.execCommand('Copy') // 执行浏览器复制命令
+      oInput.parentNode.removeChild(oInput)
     }
   }
 }
