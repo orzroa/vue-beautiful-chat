@@ -221,6 +221,10 @@ export default {
     disableUserListToggle: {
       type: Boolean,
       default: false
+    },
+    enterToSend: {
+      type: Boolean,
+      default: true
     }
   },
   computed: {

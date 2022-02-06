@@ -86,6 +86,7 @@ import Suggestions from './Suggestions.vue'
 import FileIcon from './assets/file.svg'
 import CloseIconSvg from './assets/close.svg'
 import store from './store/'
+import {mapState} from './store/'
 import IconCross from './components/icons/IconCross.vue'
 import IconOk from './components/icons/IconOk.vue'
 import IconSend from './components/icons/IconSend.vue'
@@ -153,7 +154,8 @@ export default {
     },
     isEditing() {
       return store.state.editMessage && store.state.editMessage.id
-    }
+    },
+    ...mapState(['enterToSend'])
   },
   watch: {
     editMessageId(m) {
@@ -179,8 +181,15 @@ export default {
     setInputActive(onoff) {
       this.inputActive = onoff
     },
+    wantToSend(event) {
+      if (this.enterToSend) {
+        return event.keyCode === 13 && !event.shiftKey
+      } else {
+        return event.keyCode === 13 && event.altKey
+      }
+    },
     handleKey(event) {
-      if (event.keyCode === 13 && event.altKey) {
+      if (this.wantToSend(event)) {
         if (!this.isEditing) {
           this._submitText(event)
         } else {

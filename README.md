@@ -65,6 +65,7 @@ Vue.use(Chat)
       :alwaysScrollToBottom="alwaysScrollToBottom"
       :disableUserListToggle="false"
       :messageStyling="messageStyling"
+      :enterToSend="true"
       @onType="handleOnType"
       @edit="editMessage" />
   </div>
@@ -187,6 +188,7 @@ For more detailed examples see the demo folder.
 | disableUserListToggle | Boolean | A bool indicating whether or not to allow the user to toggle between message list and participants list
 | colors | Object | An object containing the specs of the colors used to paint the component. [See here](#faq)
 | messageStyling | Boolean | A bool indicating whether or not to enable `msgdown` support for message formatting in chat. [See here](#faq)
+| enterToSend | Boolean | A bool indicating whether or not to send a message by enter or enter + alt
 
 #### Events
 
