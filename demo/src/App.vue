@@ -20,6 +20,7 @@
       :show-edition="true"
       :show-deletion="true"
       :show-sent="true"
+      :show-copy="true"
       :title-image-url="titleImageUrl"
       :disable-user-list-toggle="false"
       @onType="handleOnType"

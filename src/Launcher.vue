@@ -100,6 +100,10 @@ export default {
       type: Boolean,
       default: false
     },
+    showCopy: {
+      type: Boolean,
+      default: false
+    },
     showSent: {
       type: Boolean,
       default: false
