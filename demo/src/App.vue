@@ -89,7 +89,7 @@
         >Dark</a
       >
     </p>
-    <v-dialog />
+    <!-- v-dialog removed for Vue 3 compatibility -->
     <p class="text-center messageStyling">
       <label
         >Message styling enabled?
@@ -148,9 +148,11 @@ export default {
     }
   },
   created() {
+    console.log('App created')
     this.setColor('blue')
   },
   mounted() {
+    console.log('App mounted')
     this.messageList.forEach((x) => (x.liked = false))
   },
   methods: {
@@ -184,17 +186,13 @@ export default {
       this.chosenColor = color
     },
     showStylingInfo() {
-      this.$modal.show('dialog', {
-        title: 'Info',
-        text:
-          'You can use *word* to <strong>boldify</strong>, /word/ to <em>emphasize</em>, _word_ to <u>underline</u>, `code` to <code>write = code;</code>, ~this~ to <del>delete</del> and ^sup^ or ¡sub¡ to write <sup>sup</sup> and <sub>sub</sub>'
-      })
+      alert('You can use *word* to boldify, /word/ to emphasize, _word_ to underline, `code` to write = code;, ~this~ to delete and ^sup^ or ¡sub¡ to write sup and sub')
     },
     messageStylingToggled(e) {
       this.messageStyling = e.target.checked
     },
     handleOnType() {
-      this.$root.$emit('onType')
+      // this.$root.$emit('onType') // Vue 3不再支持$root.$emit
       this.userIsTyping = true
     },
     editMessage(message) {
@@ -217,7 +215,7 @@ export default {
       const m = this.messageList.findIndex((m) => m.id === id)
       var msg = this.messageList[m]
       msg.liked = !msg.liked
-      this.$set(this.messageList, m, msg)
+      this.messageList[m] = msg // Vue 3 reactive arrays support direct index assignment
     }
   }
 }

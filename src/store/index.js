@@ -23,5 +23,9 @@ function mapState(keys) {
   return map
 }
 
+// Attach methods to store for backward compatibility
+store.setState = setState
+store.mapState = mapState
+
 export default store
 export { mapState, setState }
