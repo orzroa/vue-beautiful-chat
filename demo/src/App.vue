@@ -1,11 +1,12 @@
 <template>
   <div :style="{background: backgroundColor}">
     <Header :chosen-color="chosenColor" :colors="colors" />
+    <div id="test">TEST</div>
     <beautiful-chat
       :always-scroll-to-bottom="alwaysScrollToBottom"
       :close="closeChat"
       :colors="colors"
-      :is-open="isChatOpen"
+      :isOpen="isChatOpen"
       :message-list="messageList"
       :message-styling="messageStyling"
       :new-messages-count="newMessagesCount"
@@ -13,7 +14,7 @@
       :open="openChat"
       :participants="participants"
       :show-close-button="true"
-      :show-launcher="true"
+      :showLauncher="true"
       :show-emoji="true"
       :show-file="true"
       :show-typing-indicator="showTypingIndicator"
@@ -194,6 +195,7 @@ export default {
     handleOnType() {
       // this.$root.$emit('onType') // Vue 3不再支持$root.$emit
       this.userIsTyping = true
+      this.$chatEmit('onType')
     },
     editMessage(message) {
       const m = this.messageList.find((m) => m.id === message.id)

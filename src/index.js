@@ -1,5 +1,5 @@
 import Launcher from './Launcher.vue'
-import VTooltip from 'floating-vue'
+import FloatingVue from 'floating-vue'
 import mitt from 'mitt'
 
 const defaultComponentName = 'BeautifulChat'
@@ -36,18 +36,19 @@ const Plugin = {
      * Sets custom component name (if provided)
      */
     app.component(this.componentName, Launcher)
-    app.use(VTooltip)
+    app.use(FloatingVue)
 
     /**
      * Compatibility layer for components using $emit/$on
+     * Use $chatEmit/$chatOn/$chatOff to avoid conflict with Vue 3 instance methods
      */
-    app.config.globalProperties.$emit = (event, ...args) => {
+    app.config.globalProperties.$chatEmit = (event, ...args) => {
       this.eventBus.emit(event, ...args)
     }
-    app.config.globalProperties.$on = (event, handler) => {
+    app.config.globalProperties.$chatOn = (event, handler) => {
       this.eventBus.on(event, handler)
     }
-    app.config.globalProperties.$off = (event, handler) => {
+    app.config.globalProperties.$chatOff = (event, handler) => {
       this.eventBus.off(event, handler)
     }
   }

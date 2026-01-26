@@ -1,10 +1,20 @@
 <template>
   <div>
+    <span style="display:none">DEBUG_LAUNCHER</span>
     <div
       v-if="showLauncher"
       class="sc-launcher"
       :class="{opened: isOpen}"
-      :style="{backgroundColor: colors.launcher.bg}"
+      :style="{
+        backgroundColor: colors.launcher.bg,
+        position: 'fixed',
+        right: '25px',
+        bottom: '25px',
+        width: '60px',
+        height: '60px',
+        borderRadius: '50%',
+        cursor: 'pointer'
+      }"
       @click.prevent="isOpen ? close() : openAndFocus()"
     >
       <div v-if="newMessagesCount > 0 && !isOpen" class="sc-new-messsages-count">
@@ -255,21 +265,21 @@ export default {
   methods: {
     openAndFocus() {
       this.open()
-      this.$emit('focusUserInput')
+      this.$chatEmit('focusUserInput')
     }
-  }
+  },
 }
 </script>
 
-<style scoped>
+<style>
 .sc-launcher {
   width: 60px;
   height: 60px;
   background-position: center;
   background-repeat: no-repeat;
-  position: fixed;
-  right: 25px;
-  bottom: 25px;
+  position: fixed !important;
+  right: 25px !important;
+  bottom: 25px !important;
   border-radius: 50%;
   box-shadow: none;
   transition: box-shadow 0.2s ease-in-out;

@@ -84,12 +84,16 @@ export default {
     }
   },
   mounted() {
-    this.$root.$on('onType', () => {
+    this._onTypeHandler = () => {
       this.userIsTyping = true
       setTimeout(() => {
         this.userIsTyping = false
       }, 3000);
-    })
+    }
+    this.$chatOn('onType', this._onTypeHandler)
+  },
+  beforeUnmount() {
+    this.$chatOff('onType', this._onTypeHandler)
   }
 }
 </script>

@@ -50,7 +50,7 @@
           <UserInputButton
             :color="colors.userInput.text"
             tooltip="Cancel"
-            @click.native.prevent="_editFinish"
+            @click.prevent="_editFinish"
           >
             <IconCross />
           </UserInputButton>
@@ -60,7 +60,7 @@
             v-if="isEditing"
             :color="colors.userInput.text"
             tooltip="Edit"
-            @click.native.prevent="_editText"
+            @click.prevent="_editText"
           >
             <IconOk />
           </UserInputButton>
@@ -68,7 +68,7 @@
             v-else
             :color="colors.userInput.text"
             tooltip="Send"
-            @click.native.prevent="_submitText"
+            @click.prevent="_submitText"
           >
             <IconSend />
           </UserInputButton>
@@ -168,14 +168,15 @@ export default {
     }
   },
   mounted() {
-    this.$on('focusUserInput', () => {
+    this._focusUserInputHandler = () => {
       if (this.$refs.userInput) {
         this.focusUserInput()
       }
-    })
+    }
+    this.$chatOn('focusUserInput', this._focusUserInputHandler)
   },
   beforeUnmount() {
-    this.$off('focusUserInput')
+    this.$chatOff('focusUserInput', this._focusUserInputHandler)
   },
   methods: {
     cancelFile() {
