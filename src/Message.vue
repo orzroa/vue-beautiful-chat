@@ -185,7 +185,7 @@ export default {
         outline: none;
       }
     }
-    & /deep/ svg {
+    & :deep(svg) {
       margin-left: 5px;
     }
   }

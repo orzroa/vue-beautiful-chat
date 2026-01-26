@@ -150,29 +150,32 @@ export default {
   },
   computed: {
     editMessageId() {
-      return this.isEditing && store.state.editMessage.id
+      return this.isEditing && store.editMessage.id
     },
     isEditing() {
-      return store.state.editMessage && store.state.editMessage.id
+      return store.editMessage && store.editMessage.id
     },
     ...mapState(['enterToSend'])
   },
   watch: {
     editMessageId(m) {
-      if (store.state.editMessage != null && store.state.editMessage != undefined) {
+      if (store.editMessage != null && store.editMessage != undefined) {
         this.$refs.userInput.focus()
-        this.$refs.userInput.textContent = store.state.editMessage.data.text
+        this.$refs.userInput.textContent = store.editMessage.data.text
       } else {
         this.$refs.userInput.textContent = ''
       }
     }
   },
   mounted() {
-    this.$root.$on('focusUserInput', () => {
+    this.$on('focusUserInput', () => {
       if (this.$refs.userInput) {
         this.focusUserInput()
       }
     })
+  },
+  beforeUnmount() {
+    this.$off('focusUserInput')
   },
   methods: {
     cancelFile() {
@@ -274,7 +277,7 @@ export default {
         this.$emit('edit', {
           author: 'me',
           type: 'text',
-          id: store.state.editMessage.id,
+          id: store.editMessage.id,
           data: {text}
         })
         this._editFinish()

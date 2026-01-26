@@ -81,7 +81,7 @@ export default {
       return this.message.author === 'me'
     },
     isEditing() {
-      return (store.state.editMessage && store.state.editMessage.id) === this.message.id
+      return (store.editMessage && store.editMessage.id) === this.message.id
     },
     ...mapState(['showDeletion', 'showEdition', 'showCopy'])
   },
@@ -139,7 +139,7 @@ export default {
         outline: none;
       }
     }
-    & /deep/ svg {
+    & :deep(svg) {
       margin-left: 5px;
     }
   }

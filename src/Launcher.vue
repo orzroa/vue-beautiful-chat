@@ -255,7 +255,7 @@ export default {
   methods: {
     openAndFocus() {
       this.open()
-      this.$root.$emit('focusUserInput')
+      this.$emit('focusUserInput')
     }
   }
 }

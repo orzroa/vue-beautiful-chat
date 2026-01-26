@@ -3,27 +3,25 @@
  * and instantiated externally
  **/
 
-import Vue from 'vue'
+import { reactive } from 'vue'
 
-const store = {
-  state: Vue.observable({
-    editMessage: null
-  }),
+const store = reactive({
+  editMessage: null
+})
 
-  setState(key, val) {
-    Vue.set(this.state, key, val)
-  }
+function setState(key, val) {
+  store[key] = val
 }
 
 function mapState(keys) {
   const map = {}
   keys.forEach((key) => {
     map[key] = function () {
-      return store.state[key]
+      return store[key]
     }
   })
   return map
 }
 
 export default store
-export {mapState}
+export { mapState, setState }
