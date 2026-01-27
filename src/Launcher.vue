@@ -1,6 +1,5 @@
 <template>
   <div>
-    <span style="display:none">DEBUG_LAUNCHER</span>
     <div
       v-if="showLauncher"
       class="sc-launcher"
@@ -72,13 +71,15 @@
 </template>
 
 <script>
+import { defineComponent } from 'vue'
 import store from './store/'
 import ChatWindow from './ChatWindow.vue'
 
 import CloseIcon from './assets/close-icon.png'
 import OpenIcon from './assets/logo-no-bg.svg'
 
-export default {
+export default defineComponent({
+  name: 'Launcher',
   components: {
     ChatWindow
   },
@@ -268,7 +269,7 @@ export default {
       this.$chatEmit('focusUserInput')
     }
   },
-}
+})
 </script>
 
 <style>

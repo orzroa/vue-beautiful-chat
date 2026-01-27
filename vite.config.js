@@ -3,7 +3,17 @@ import vue from '@vitejs/plugin-vue'
 import { resolve } from 'path'
 
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [
+    vue({
+      template: {
+        compilerOptions: {
+          isCustomElement: (tag) => false,
+          hoistStatic: true,
+          cacheHandlers: true
+        }
+      }
+    })
+  ],
   build: {
     lib: {
       entry: resolve(__dirname, 'src/index.js'),

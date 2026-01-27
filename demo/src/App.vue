@@ -149,11 +149,9 @@ export default {
     }
   },
   created() {
-    console.log('App created')
     this.setColor('blue')
   },
   mounted() {
-    console.log('App mounted')
     this.messageList.forEach((x) => (x.liked = false))
   },
   methods: {

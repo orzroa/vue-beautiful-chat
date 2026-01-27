@@ -60,12 +60,14 @@
 </template>
 
 <script>
+import { defineComponent } from 'vue'
 import Header from './Header.vue'
 import MessageList from './MessageList.vue'
 import UserInput from './UserInput.vue'
 import UserList from './UserList.vue'
 
-export default {
+export default defineComponent({
+  name: 'ChatWindow',
   components: {
     Header,
     MessageList,
@@ -146,20 +148,20 @@ export default {
       return this.messages.length > 0 ? this.messages[this.messages.length - 1].suggestions : []
     }
   }
-}
+})
 </script>
 
-<style scoped>
+<style>
 .sc-chat-window {
-  width: 100%;
-  height: 100%;
-  max-height: 100%;
+  width: 370px;
+  height: calc(100% - 120px);
+  max-height: 590px;
   position: fixed;
-  left: 0px;
-  top: 0px;
+  right: 25px;
+  bottom: 100px;
   box-sizing: border-box;
-  box-shadow: 0px 7px 40px 2px rgba(148, 149, 150, 0.1);
-  background: white;
+  box-shadow: 0 7px 40px 2px rgba(148, 149, 150, 0.1);
+  background: #fff;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

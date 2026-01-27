@@ -9,8 +9,7 @@
   },
   "dependencies": {
     "node-forge": "^1.0.0",
-    "vue": "^3.2.0",
-    "vue-js-modal": "^2.0.0"
+    "vue": "^3.2.0"
   },
   "devDependencies": {
     "@vue/cli-service": "^5.0.0",

@@ -28,8 +28,9 @@
     "imagemin": "^6.1.0",
     "kind-of": "6.0.3",
     "minimist": "1.2.3",
+    "mitt": "^3.0.0",
     "msgdown": "^1.0.2",
-    "mitt": "^3.0.0"
+    "puppeteer": "^24.36.0"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.22.0",
@@ -48,8 +49,8 @@
     "husky": "^8.0.0",
     "lint-staged": "^13.0.0",
     "node-forge": "^1.0.0",
-    "sass": "^1.75.0",
     "prettier": "^3.0.0",
+    "sass": "^1.75.0",
     "sass-loader": "^14.0.0",
     "vite": "^5.0.0",
     "vue": "^3.2.0"

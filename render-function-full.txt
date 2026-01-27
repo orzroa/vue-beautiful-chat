@@ -1,0 +1,92 @@
+function render(_ctx, _cache, $props, $setup, $data, $options) {
+  const _component_ChatWindow = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ChatWindow")
+
+  return ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", null, [
+    _cache[6] || (_cache[6] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", { style: {"display":"none"} }, "DEBUG_LAUNCHER", -1 /* CACHED */)),
+    (_ctx.showLauncher)
+      ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
+          key: 0,
+          class: (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["sc-launcher", {opened: _ctx.isOpen}]),
+          style: (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeStyle)({
+        backgroundColor: _ctx.colors.launcher.bg,
+        position: 'fixed',
+        right: '25px',
+        bottom: '25px',
+        width: '60px',
+        height: '60px',
+        borderRadius: '50%',
+        cursor: 'pointer'
+      }),
+          onClick: _cache[0] || (_cache[0] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)($event => (_ctx.isOpen ? _ctx.close() : _ctx.openAndFocus()), ["prevent"]))
+        }, [
+          (_ctx.newMessagesCount > 0 && !_ctx.isOpen)
+            ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.newMessagesCount), 1 /* TEXT */))
+            : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true),
+          (_ctx.isOpen)
+            ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("img", {
+                key: 1,
+                class: "sc-closed-icon",
+                src: _ctx.icons.close.img,
+                alt: _ctx.icons.close.name
+              }, null, 8 /* PROPS */, _hoisted_2))
+            : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("img", {
+                key: 2,
+                class: "sc-open-icon",
+                src: _ctx.icons.open.img,
+                alt: _ctx.icons.open.name
+              }, null, 8 /* PROPS */, _hoisted_3))
+        ], 6 /* CLASS, STYLE */))
+      : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true),
+    (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ChatWindow, {
+      "message-list": _ctx.messageList,
+      "on-user-input-submit": _ctx.onMessageWasSent,
+      participants: _ctx.participants,
+      title: _ctx.chatWindowTitle,
+      "is-open": _ctx.isOpen,
+      "show-emoji": _ctx.showEmoji,
+      "show-file": _ctx.showFile,
+      "show-header": _ctx.showHeader,
+      placeholder: _ctx.placeholder,
+      "show-typing-indicator": _ctx.showTypingIndicator,
+      colors: _ctx.colors,
+      "always-scroll-to-bottom": _ctx.alwaysScrollToBottom,
+      "message-styling": _ctx.messageStyling,
+      onClose: _ctx.close,
+      onScrollToTop: _cache[1] || (_cache[1] = $event => (_ctx.$emit('scrollToTop'))),
+      onOnType: _cache[2] || (_cache[2] = $event => (_ctx.$emit('onType'))),
+      onEdit: _cache[3] || (_cache[3] = $event => (_ctx.$emit('edit', $event))),
+      onRemove: _cache[4] || (_cache[4] = $event => (_ctx.$emit('remove', $event))),
+      onResend: _cache[5] || (_cache[5] = $event => (_ctx.$emit('resend', $event)))
+    }, {
+      header: (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(() => [
+        (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderSlot)(_ctx.$slots, "header")
+      ]),
+      "user-avatar": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)((scopedProps) => [
+        (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderSlot)(_ctx.$slots, "user-avatar", {
+          user: scopedProps.user,
+          message: scopedProps.message
+        })
+      ]),
+      "text-message-body": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)((scopedProps) => [
+        (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderSlot)(_ctx.$slots, "text-message-body", {
+          message: scopedProps.message,
+          messageText: scopedProps.messageText,
+          messageColors: scopedProps.messageColors,
+          me: scopedProps.me
+        })
+      ]),
+      "system-message-body": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)((scopedProps) => [
+        (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderSlot)(_ctx.$slots, "system-message-body", {
+          message: scopedProps.message
+        })
+      ]),
+      "text-message-toolbox": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)((scopedProps) => [
+        (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderSlot)(_ctx.$slots, "text-message-toolbox", {
+          message: scopedProps.message,
+          me: scopedProps.me
+        })
+      ]),
+      _: 3 /* FORWARDED */
+    }, 8 /* PROPS */, ["message-list", "on-user-input-submit", "participants", "title", "is-open", "show-emoji", "show-file", "show-header", "placeholder", "show-typing-indicator", "colors", "always-scroll-to-bottom", "message-styling", "onClose"])
+  ]))
+}
