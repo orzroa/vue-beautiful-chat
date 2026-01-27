@@ -60,14 +60,12 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue'
 import Header from './Header.vue'
 import MessageList from './MessageList.vue'
 import UserInput from './UserInput.vue'
 import UserList from './UserList.vue'
 
-export default defineComponent({
-  name: 'ChatWindow',
+export default {
   components: {
     Header,
     MessageList,
@@ -148,7 +146,7 @@ export default defineComponent({
       return this.messages.length > 0 ? this.messages[this.messages.length - 1].suggestions : []
     }
   }
-})
+}
 </script>
 
 <style>

@@ -4,16 +4,7 @@
       v-if="showLauncher"
       class="sc-launcher"
       :class="{opened: isOpen}"
-      :style="{
-        backgroundColor: colors.launcher.bg,
-        position: 'fixed',
-        right: '25px',
-        bottom: '25px',
-        width: '60px',
-        height: '60px',
-        borderRadius: '50%',
-        cursor: 'pointer'
-      }"
+      :style="{backgroundColor: colors.launcher.bg}"
       @click.prevent="isOpen ? close() : openAndFocus()"
     >
       <div v-if="newMessagesCount > 0 && !isOpen" class="sc-new-messsages-count">
@@ -71,15 +62,13 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue'
 import store from './store/'
 import ChatWindow from './ChatWindow.vue'
 
 import CloseIcon from './assets/close-icon.png'
 import OpenIcon from './assets/logo-no-bg.svg'
 
-export default defineComponent({
-  name: 'Launcher',
+export default {
   components: {
     ChatWindow
   },
@@ -268,19 +257,19 @@ export default defineComponent({
       this.open()
       this.$chatEmit('focusUserInput')
     }
-  },
-})
+  }
+}
 </script>
 
-<style>
+<style scoped>
 .sc-launcher {
   width: 60px;
   height: 60px;
   background-position: center;
   background-repeat: no-repeat;
-  position: fixed !important;
-  right: 25px !important;
-  bottom: 25px !important;
+  position: fixed;
+  right: 25px;
+  bottom: 25px;
   border-radius: 50%;
   box-shadow: none;
   transition: box-shadow 0.2s ease-in-out;
