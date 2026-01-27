@@ -149,7 +149,27 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+.sc-chat-window.full {
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  box-sizing: border-box;
+  box-shadow: 0px 7px 40px 2px rgba(148, 149, 150, 0.1);
+  background: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: 10px;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  animation: fadeIn;
+  animation-duration: 0.3s;
+  animation-timing-function: ease-in-out;
+}
+
 .sc-chat-window {
   width: 370px;
   height: calc(100% - 120px);
@@ -158,8 +178,8 @@ export default {
   right: 25px;
   bottom: 100px;
   box-sizing: border-box;
-  box-shadow: 0 7px 40px 2px rgba(148, 149, 150, 0.1);
-  background: #fff;
+  box-shadow: 0px 7px 40px 2px rgba(148, 149, 150, 0.1);
+  background: white;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

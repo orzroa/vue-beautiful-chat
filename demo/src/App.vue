@@ -1,12 +1,11 @@
 <template>
   <div :style="{background: backgroundColor}">
     <Header :chosen-color="chosenColor" :colors="colors" />
-    <div id="test">TEST</div>
     <beautiful-chat
       :always-scroll-to-bottom="alwaysScrollToBottom"
       :close="closeChat"
       :colors="colors"
-      :isOpen="isChatOpen"
+      :is-open="isChatOpen"
       :message-list="messageList"
       :message-styling="messageStyling"
       :new-messages-count="newMessagesCount"
@@ -14,7 +13,7 @@
       :open="openChat"
       :participants="participants"
       :show-close-button="true"
-      :showLauncher="true"
+      :show-launcher="true"
       :show-emoji="true"
       :show-file="true"
       :show-typing-indicator="showTypingIndicator"
