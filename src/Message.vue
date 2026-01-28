@@ -57,23 +57,21 @@
         <slot name="system-message-body" :message="message.data"> </slot>
       </SystemMessage>
     </div>
-    <template>
-      <div v-if="showSent && message.author === 'me'" class="sc-message--toolbox">
-        <IconBase
-          v-if="message.data.sent"
-          :color="messageColors.backgroundColor"
-          width="10"
-          icon-name="sent"
-        >
-          <IconSent />
+    <div v-if="showSent && message.author === 'me'" class="sc-message--toolbox">
+      <IconBase
+        v-if="message.data.sent"
+        :color="messageColors.backgroundColor"
+        width="10"
+        icon-name="sent"
+      >
+        <IconSent />
+      </IconBase>
+      <button v-else @click="$emit('resend')">
+        <IconBase color="red" width="24" view-box="0 0 24 24" icon-name="resend">
+          <IconResend />
         </IconBase>
-        <button v-else @click="$emit('resend')">
-          <IconBase color="red" width="24" view-box="0 0 24 24" icon-name="resend">
-            <IconResend />
-          </IconBase>
-        </button>
-      </div>
-    </template>
+      </button>
+    </div>
   </div>
 </template>
 

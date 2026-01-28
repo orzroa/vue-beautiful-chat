@@ -1,5 +1,5 @@
 <template>
-  <div class="sc-chat-window" :class="{opened: isOpen, closed: !isOpen}">
+  <div class="sc-chat-window full" :class="{opened: isOpen, closed: !isOpen}">
     <Header
       v-if="showHeader"
       :title="title"
