@@ -16,43 +16,40 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import {ref, onMounted} from 'vue'
 import EmojiConvertor from 'emoji-js'
 import emojiData from './emojiData'
 
-export default {
-  props: {
-    onBlur: {
-      type: Function,
-      required: true
-    },
-    onEmojiPicked: {
-      type: Function,
-      required: true
-    }
+const props = defineProps({
+  onBlur: {
+    type: Function,
+    required: true
   },
-  data() {
-    return {
-      emojiData,
-      emojiConvertor: new EmojiConvertor()
-    }
-  },
-  mounted() {
-    const elem = this.$refs.domNode
-    elem.style.opacity = 0
-    window.requestAnimationFrame(() => {
-      elem.style.transition = 'opacity 350ms'
-      elem.style.opacity = 1
-    })
-    this.$refs.domNode.focus()
-    this.emojiConvertor.init_env()
-  },
-  methods: {
-    emojiClicked(emoji) {
-      this.onEmojiPicked(emoji)
-      this.$refs.domNode.blur()
-    }
+  onEmojiPicked: {
+    type: Function,
+    required: true
   }
+})
+
+const domNode = ref(null)
+const emojiDataRef = emojiData
+const emojiConvertor = new EmojiConvertor()
+
+onMounted(() => {
+  const elem = domNode.value
+  elem.style.opacity = 0
+  window.requestAnimationFrame(() => {
+    elem.style.transition = 'opacity 350ms'
+    elem.style.opacity = 1
+  })
+  domNode.value.focus()
+  emojiConvertor.init_env()
+})
+
+const emojiClicked = (emoji) => {
+  props.onEmojiPicked(emoji)
+  domNode.value.blur()
 }
 </script>
 

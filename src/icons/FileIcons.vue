@@ -16,23 +16,20 @@
   </label>
 </template>
 
-<script>
-export default {
-  props: {
-    onChange: {
-      type: Function,
-      required: true
-    },
-    color: {
-      type: String,
-      required: true
-    }
+<script setup>
+const props = defineProps({
+  onChange: {
+    type: Function,
+    required: true
   },
-  methods: {
-    _handleChange(e) {
-      this.onChange(e.target.files[0])
-    }
+  color: {
+    type: String,
+    required: true
   }
+})
+
+const _handleChange = (e) => {
+  props.onChange(e.target.files[0])
 }
 </script>
 

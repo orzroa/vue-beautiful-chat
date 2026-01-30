@@ -25,36 +25,29 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import {ref} from 'vue'
 import EmojiPicker from './../EmojiPicker.vue'
 
-export default {
-  components: {
-    EmojiPicker
+const props = defineProps({
+  onEmojiPicked: {
+    type: Function,
+    required: true
   },
-  props: {
-    onEmojiPicked: {
-      type: Function,
-      required: true
-    },
-    color: {
-      type: String,
-      required: true
-    }
-  },
-  data() {
-    return {
-      isActive: false
-    }
-  },
-  methods: {
-    _openPicker(e) {
-      this.isActive = !this.isActive
-    },
-    _handlePickerBlur() {
-      this.isActive = false
-    }
+  color: {
+    type: String,
+    required: true
   }
+})
+
+const isActive = ref(false)
+
+const _openPicker = (e) => {
+  isActive.value = !isActive.value
+}
+
+const _handlePickerBlur = () => {
+  isActive.value = false
 }
 </script>
 

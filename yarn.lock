@@ -800,21 +800,6 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@orzroa/vue-beautiful-chat@file:orzroa-vue-beautiful-chat-3.0.0.tgz":
-  version "3.0.0"
-  resolved "file:orzroa-vue-beautiful-chat-3.0.0.tgz"
-  integrity sha512-4/zTq9DE8xPEvv0zhCUbX60GEa9eR6siqReehE5UU8Q1xXX+5WqppxUi0prNmzaYEMH5PR7+LbhonBitFEaRPg==
-  dependencies:
-    autolinker "^1.8.3"
-    emoji-js "^3.4.0"
-    escape-goat "^1.3.0"
-    floating-vue "^2.0.0"
-    imagemin "^6.1.0"
-    kind-of "6.0.3"
-    minimist "1.2.3"
-    mitt "^3.0.0"
-    msgdown "^1.0.2"
-
 "@parcel/watcher-linux-x64-glibc@2.5.6":
   version "2.5.6"
   resolved "https://registry.npmmirror.com/@parcel/watcher-linux-x64-glibc/-/watcher-linux-x64-glibc-2.5.6.tgz"

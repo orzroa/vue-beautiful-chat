@@ -15,23 +15,23 @@
       @remove="$emit('remove', message)"
       @resend="$emit('resend', message)"
     >
-      <template v-slot:user-avatar="scopedProps">
+      <template #user-avatar="scopedProps">
         <slot name="user-avatar" :user="scopedProps.user" :message="scopedProps.message"> </slot>
       </template>
-      <template v-slot:text-message-body="scopedProps">
+      <template #text-message-body="scopedProps">
         <slot
           name="text-message-body"
           :message="scopedProps.message"
-          :messageText="scopedProps.messageText"
-          :messageColors="scopedProps.messageColors"
+          :message-text="scopedProps.messageText"
+          :message-colors="scopedProps.messageColors"
           :me="scopedProps.me"
         >
         </slot>
       </template>
-      <template v-slot:system-message-body="scopedProps">
+      <template #system-message-body="scopedProps">
         <slot name="system-message-body" :message="scopedProps.message"> </slot>
       </template>
-      <template v-slot:text-message-toolbox="scopedProps">
+      <template #text-message-toolbox="scopedProps">
         <slot name="text-message-toolbox" :message="scopedProps.message" :me="scopedProps.me">
         </slot>
       </template>
@@ -46,73 +46,83 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import {ref, onMounted, onUpdated, nextTick, computed} from 'vue'
 import Message from './Message.vue'
 import chatIcon from './assets/chat-icon.svg'
 
-export default {
-  components: {
-    Message
-  },
-  props: {
-    participants: {
-      type: Array,
-      required: true
-    },
-    messages: {
-      type: Array,
-      required: true
-    },
-    showTypingIndicator: {
-      type: String,
-      required: true
-    },
-    colors: {
-      type: Object,
-      required: true
-    },
-    alwaysScrollToBottom: {
-      type: Boolean,
-      required: true
-    },
-    messageStyling: {
-      type: Boolean,
-      required: true
-    }
-  },
-  computed: {
-    defaultChatIcon() {
-      return chatIcon
-    }
-  },
-  mounted() {
-    this.$nextTick(this._scrollDown())
-  },
-  updated() {
-    if (this.shouldScrollToBottom()) this.$nextTick(this._scrollDown())
-  },
-  methods: {
-    _scrollDown() {
-      this.$refs.scrollList.scrollTop = this.$refs.scrollList.scrollHeight
-    },
-    handleScroll(e) {
-      if (e.target.scrollTop === 0) {
-        this.$emit('scrollToTop')
-      }
-    },
-    shouldScrollToBottom() {
-      const scrollTop = this.$refs.scrollList.scrollTop
-      const scrollable = scrollTop > this.$refs.scrollList.scrollHeight - 600
-      return this.alwaysScrollToBottom || scrollable
-    },
-    profile(author) {
-      const profile = this.participants.find((profile) => profile.id === author)
+defineOptions({
+  name: 'ChatMessageList'
+})
 
-      // A profile may not be found for system messages or messages by 'me'
-      return profile || {imageUrl: '', name: ''}
-    }
+const props = defineProps({
+  participants: {
+    type: Array,
+    required: true
+  },
+  messages: {
+    type: Array,
+    required: true
+  },
+  showTypingIndicator: {
+    type: String,
+    required: true
+  },
+  colors: {
+    type: Object,
+    required: true
+  },
+  alwaysScrollToBottom: {
+    type: Boolean,
+    required: true
+  },
+  messageStyling: {
+    type: Boolean,
+    required: true
+  }
+})
+
+const emit = defineEmits(['remove', 'resend', 'scrollToTop'])
+
+const scrollList = ref(null)
+
+const defaultChatIcon = computed(() => {
+  return chatIcon
+})
+
+const _scrollDown = () => {
+  if (scrollList.value) {
+    scrollList.value.scrollTop = scrollList.value.scrollHeight
   }
 }
+
+const handleScroll = (e) => {
+  if (e.target.scrollTop === 0) {
+    emit('scrollToTop')
+  }
+}
+
+const shouldScrollToBottom = () => {
+  if (!scrollList.value) return false
+  const scrollTop = scrollList.value.scrollTop
+  const scrollable = scrollTop > scrollList.value.scrollHeight - 600
+  return props.alwaysScrollToBottom || scrollable
+}
+
+const profile = (author) => {
+  const profileData = props.participants.find((profile) => profile.id === author)
+
+  // A profile may not be found for system messages or messages by 'me'
+  return profileData || {imageUrl: '', name: ''}
+}
+
+onMounted(() => {
+  nextTick(_scrollDown())
+})
+
+onUpdated(() => {
+  if (shouldScrollToBottom()) nextTick(_scrollDown())
+})
 </script>
 
 <style scoped>

@@ -27,17 +27,17 @@
         :message-styling="messageStyling"
         @remove="$emit('remove')"
       >
-        <template v-slot:default="scopedProps">
+        <template #default="scopedProps">
           <slot
             name="text-message-body"
             :message="scopedProps.message"
-            :messageText="scopedProps.messageText"
-            :messageColors="scopedProps.messageColors"
+            :message-text="scopedProps.messageText"
+            :message-colors="scopedProps.messageColors"
             :me="scopedProps.me"
           >
           </slot>
         </template>
-        <template v-slot:text-message-toolbox="scopedProps">
+        <template #text-message-toolbox="scopedProps">
           <slot name="text-message-toolbox" :message="scopedProps.message" :me="scopedProps.me">
           </slot>
         </template>
@@ -75,8 +75,9 @@
   </div>
 </template>
 
-<script>
-import {mapState} from './store/'
+<script setup>
+import {computed} from 'vue'
+import store from './store/'
 import TextMessage from './messages/TextMessage.vue'
 import FileMessage from './messages/FileMessage.vue'
 import EmojiMessage from './messages/EmojiMessage.vue'
@@ -87,67 +88,66 @@ import IconBase from './components/IconBase.vue'
 import IconSent from './components/icons/IconSent.vue'
 import IconResend from './components/icons/IconResend.vue'
 
-export default {
-  components: {
-    TextMessage,
-    FileMessage,
-    EmojiMessage,
-    TypingMessage,
-    SystemMessage,
-    IconBase,
-    IconSent,
-    IconResend
+defineOptions({
+  name: 'ChatMessage'
+})
+
+const props = defineProps({
+  message: {
+    type: Object,
+    required: true
   },
-  props: {
-    message: {
-      type: Object,
-      required: true
-    },
-    colors: {
-      type: Object,
-      required: true
-    },
-    messageStyling: {
-      type: Boolean,
-      required: true
-    },
-    user: {
-      type: Object,
-      required: true
-    }
+  colors: {
+    type: Object,
+    required: true
   },
-  computed: {
-    authorName() {
-      return this.user && this.user.name
-    },
-    chatImageUrl() {
-      return (this.user && this.user.imageUrl) || chatIcon
-    },
-    messageColors() {
-      return this.message.author === 'me' ? this.sentColorsStyle : this.receivedColorsStyle
-    },
-    receivedColorsStyle() {
-      return {
-        color: this.colors.receivedMessage.text,
-        backgroundColor: this.colors.receivedMessage.bg
-      }
-    },
-    sentColorsStyle() {
-      return {
-        color: this.colors.sentMessage.text,
-        backgroundColor: this.colors.sentMessage.bg
-      }
-    },
-    messageTitle() {
-      if (this.message.timeStamp) {
-        return new Date(this.message.timeStamp)
-      } else {
-        return ''
-      }
-    },
-    ...mapState(['showSent'])
+  messageStyling: {
+    type: Boolean,
+    required: true
+  },
+  user: {
+    type: Object,
+    required: true
   }
-}
+})
+
+const emit = defineEmits(['remove', 'resend'])
+
+const authorName = computed(() => {
+  return props.user && props.user.name
+})
+
+const chatImageUrl = computed(() => {
+  return (props.user && props.user.imageUrl) || chatIcon
+})
+
+const messageColors = computed(() => {
+  return props.message.author === 'me' ? sentColorsStyle.value : receivedColorsStyle.value
+})
+
+const receivedColorsStyle = computed(() => {
+  return {
+    color: props.colors.receivedMessage.text,
+    backgroundColor: props.colors.receivedMessage.bg
+  }
+})
+
+const sentColorsStyle = computed(() => {
+  return {
+    color: props.colors.sentMessage.text,
+    backgroundColor: props.colors.sentMessage.bg
+  }
+})
+
+const messageTitle = computed(() => {
+  if (props.message.timeStamp) {
+    return new Date(props.message.timeStamp)
+  } else {
+    return ''
+  }
+})
+
+const showSent = computed(() => store.showSent)
 </script>
 
 <style lang="scss">
@@ -297,7 +297,9 @@ export default {
   &[aria-hidden='true'] {
     visibility: hidden;
     opacity: 0;
-    transition: opacity 0.15s, visibility 0.15s;
+    transition:
+      opacity 0.15s,
+      visibility 0.15s;
   }
   &[aria-hidden='false'] {
     visibility: visible;

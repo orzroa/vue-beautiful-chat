@@ -15,22 +15,23 @@
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    suggestions: {
-      type: Array,
-      default: () => []
-    },
-    colors: {
-      type: Object,
-      required: true
-    }
+<script setup>
+defineOptions({
+  name: 'ChatSuggestions'
+})
+
+const props = defineProps({
+  suggestions: {
+    type: Array,
+    default: () => []
   },
-  data() {
-    return {}
+  colors: {
+    type: Object,
+    required: true
   }
-}
+})
+
+const emit = defineEmits(['sendSuggestion'])
 </script>
 
 <style>

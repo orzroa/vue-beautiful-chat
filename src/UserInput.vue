@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Suggestions :suggestions="suggestions" :colors="colors" @sendSuggestion="_submitSuggestion" />
+    <Suggestions :suggestions="suggestions" :colors="colors" @send-suggestion="_submitSuggestion" />
     <div
       v-if="file"
       class="file-container"
@@ -78,7 +78,8 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import {ref, computed, watch, onMounted, onBeforeUnmount, nextTick} from 'vue'
 import EmojiIcon from './icons/EmojiIcon.vue'
 import FileIcons from './icons/FileIcons.vue'
 import UserInputButton from './UserInputButton.vue'
@@ -86,221 +87,226 @@ import Suggestions from './Suggestions.vue'
 import FileIcon from './assets/file.svg'
 import CloseIconSvg from './assets/close.svg'
 import store from './store/'
-import {mapState} from './store/'
 import IconCross from './components/icons/IconCross.vue'
 import IconOk from './components/icons/IconOk.vue'
 import IconSend from './components/icons/IconSend.vue'
 
-export default {
-  components: {
-    EmojiIcon,
-    FileIcons,
-    UserInputButton,
-    Suggestions,
-    IconCross,
-    IconOk,
-    IconSend
-  },
-  props: {
-    icons: {
-      type: Object,
-      default: function () {
-        return {
-          file: {
-            img: FileIcon,
-            name: 'default'
-          },
-          closeSvg: {
-            img: CloseIconSvg,
-            name: 'default'
-          }
+const props = defineProps({
+  icons: {
+    type: Object,
+    default: function () {
+      return {
+        file: {
+          img: FileIcon,
+          name: 'default'
+        },
+        closeSvg: {
+          img: CloseIconSvg,
+          name: 'default'
         }
       }
-    },
-    showEmoji: {
-      type: Boolean,
-      default: () => false
-    },
-    suggestions: {
-      type: Array,
-      default: () => []
-    },
-    showFile: {
-      type: Boolean,
-      default: () => false
-    },
-    onSubmit: {
-      type: Function,
-      required: true
-    },
-    placeholder: {
-      type: String,
-      default: 'Write something...'
-    },
-    colors: {
-      type: Object,
-      required: true
     }
   },
-  data() {
-    return {
-      file: null,
-      inputActive: false
-    }
+  showEmoji: {
+    type: Boolean,
+    default: () => false
   },
-  computed: {
-    editMessageId() {
-      return this.isEditing && store.editMessage.id
-    },
-    isEditing() {
-      return store.editMessage && store.editMessage.id
-    },
-    ...mapState(['enterToSend'])
+  suggestions: {
+    type: Array,
+    default: () => []
   },
-  watch: {
-    editMessageId(m) {
-      if (store.editMessage != null && store.editMessage != undefined) {
-        this.$refs.userInput.focus()
-        this.$refs.userInput.textContent = store.editMessage.data.text
-      } else {
-        this.$refs.userInput.textContent = ''
-      }
-    }
+  showFile: {
+    type: Boolean,
+    default: () => false
   },
-  mounted() {
-    this._focusUserInputHandler = () => {
-      if (this.$refs.userInput) {
-        this.focusUserInput()
-      }
-    }
-    this.$chatOn('focusUserInput', this._focusUserInputHandler)
+  onSubmit: {
+    type: Function,
+    required: true
   },
-  beforeUnmount() {
-    this.$chatOff('focusUserInput', this._focusUserInputHandler)
+  placeholder: {
+    type: String,
+    default: 'Write something...'
   },
-  methods: {
-    cancelFile() {
-      this.file = null
-    },
-    setInputActive(onoff) {
-      this.inputActive = onoff
-    },
-    wantToSend(event) {
-      if (this.enterToSend) {
-        return event.keyCode === 13 && !event.shiftKey
-      } else {
-        return event.keyCode === 13 && event.altKey
-      }
-    },
-    handleKey(event) {
-      if (this.wantToSend(event)) {
-        if (!this.isEditing) {
-          this._submitText(event)
-        } else {
-          this._editText(event)
-        }
-        this._editFinish()
-        event.preventDefault()
-      } else if (event.keyCode === 27) {
-        this._editFinish()
-        event.preventDefault()
-      }
+  colors: {
+    type: Object,
+    required: true
+  }
+})
 
-      this.$emit('onType')
-    },
-    focusUserInput() {
-      this.$nextTick(() => {
-        this.$refs.userInput.focus()
-      })
-    },
-    _submitSuggestion(suggestion) {
-      this.onSubmit({author: 'me', type: 'text', data: {text: suggestion, sent: false}})
-    },
-    _checkSubmitSuccess(success) {
-      if (Promise !== undefined) {
-        Promise.resolve(success).then(
-          function (wasSuccessful) {
-            if (wasSuccessful === undefined || wasSuccessful) {
-              this.file = null
-              this.$refs.userInput.innerHTML = ''
-            }
-          }.bind(this)
-        )
-      } else {
-        this.file = null
-        this.$refs.userInput.innerHTML = ''
-      }
-    },
-    _submitText(event) {
-      const text = this.$refs.userInput.textContent
-      var file = []
-      if (this.file) {
-        file.push(this.file)
-      }
-      file.push(...this.$refs.userInput.getElementsByTagName('img'))
+const emit = defineEmits(['onType', 'edit'])
 
-      if (file.length > 0) {
-        this._submitTextWhenFile(event, text, file)
-      } else {
-        if (text && text.trim().length > 0) {
-          this._checkSubmitSuccess(
-            this.onSubmit({
-              author: 'me',
-              type: 'text',
-              data: {text, sent: false}
-            })
-          )
+const file = ref(null)
+const inputActive = ref(false)
+const userInput = ref(null)
+
+const editMessageId = computed(() => {
+  return isEditing.value && store.editMessage.id
+})
+
+const isEditing = computed(() => {
+  return store.editMessage && store.editMessage.id
+})
+
+const enterToSend = computed(() => store.enterToSend)
+
+watch(editMessageId, (m) => {
+  if (store.editMessage != null && store.editMessage != undefined) {
+    userInput.value.focus()
+    userInput.value.textContent = store.editMessage.data.text
+  } else {
+    userInput.value.textContent = ''
+  }
+})
+
+const cancelFile = () => {
+  file.value = null
+}
+
+const setInputActive = (onoff) => {
+  inputActive.value = onoff
+}
+
+const wantToSend = (event) => {
+  if (enterToSend.value) {
+    return event.keyCode === 13 && !event.shiftKey
+  } else {
+    return event.keyCode === 13 && event.altKey
+  }
+}
+
+const handleKey = (event) => {
+  if (wantToSend(event)) {
+    if (!isEditing.value) {
+      _submitText(event)
+    } else {
+      _editText(event)
+    }
+    _editFinish()
+    event.preventDefault()
+  } else if (event.keyCode === 27) {
+    _editFinish()
+    event.preventDefault()
+  }
+
+  emit('onType')
+}
+
+const focusUserInput = () => {
+  nextTick(() => {
+    if (userInput.value) {
+      userInput.value.focus()
+    }
+  })
+}
+
+const _submitSuggestion = (suggestion) => {
+  props.onSubmit({author: 'me', type: 'text', data: {text: suggestion, sent: false}})
+}
+
+const _checkSubmitSuccess = (success) => {
+  if (Promise !== undefined) {
+    Promise.resolve(success).then(
+      function (wasSuccessful) {
+        if (wasSuccessful === undefined || wasSuccessful) {
+          file.value = null
+          userInput.value.innerHTML = ''
         }
-      }
-    },
-    _submitTextWhenFile(event, text, file) {
-      if (text && text.length > 0) {
-        this._checkSubmitSuccess(
-          this.onSubmit({
-            author: 'me',
-            type: 'file',
-            data: {text, file, sent: false}
-          })
-        )
-      } else {
-        this._checkSubmitSuccess(
-          this.onSubmit({
-            author: 'me',
-            type: 'file',
-            data: {file, sent: false}
-          })
-        )
-      }
-    },
-    _editText(event) {
-      const text = this.$refs.userInput.textContent
-      if (text && text.length) {
-        this.$emit('edit', {
+      }.bind({file, userInput})
+    )
+  } else {
+    file.value = null
+    userInput.value.innerHTML = ''
+  }
+}
+
+const _submitText = (event) => {
+  const text = userInput.value.textContent
+  var fileArr = []
+  if (file.value) {
+    fileArr.push(file.value)
+  }
+  fileArr.push(...userInput.value.getElementsByTagName('img'))
+
+  if (fileArr.length > 0) {
+    _submitTextWhenFile(event, text, fileArr)
+  } else {
+    if (text && text.trim().length > 0) {
+      _checkSubmitSuccess(
+        props.onSubmit({
           author: 'me',
           type: 'text',
-          id: store.editMessage.id,
-          data: {text}
-        })
-        this._editFinish()
-      }
-    },
-    _handleEmojiPicked(emoji) {
-      this._checkSubmitSuccess(
-        this.onSubmit({
-          author: 'me',
-          type: 'emoji',
-          data: {emoji, sent: false}
+          data: {text, sent: false}
         })
       )
-    },
-    _handleFileSubmit(file) {
-      this.file = file
-    },
-    _editFinish() {
-      store.setState('editMessage', null)
     }
   }
 }
+
+const _submitTextWhenFile = (event, text, fileArr) => {
+  if (text && text.length > 0) {
+    _checkSubmitSuccess(
+      props.onSubmit({
+        author: 'me',
+        type: 'file',
+        data: {text, file: fileArr, sent: false}
+      })
+    )
+  } else {
+    _checkSubmitSuccess(
+      props.onSubmit({
+        author: 'me',
+        type: 'file',
+        data: {file: fileArr, sent: false}
+      })
+    )
+  }
+}
+
+const _editText = (event) => {
+  const text = userInput.value.textContent
+  if (text && text.length) {
+    emit('edit', {
+      author: 'me',
+      type: 'text',
+      id: store.editMessage.id,
+      data: {text}
+    })
+    _editFinish()
+  }
+}
+
+const _handleEmojiPicked = (emoji) => {
+  _checkSubmitSuccess(
+    props.onSubmit({
+      author: 'me',
+      type: 'emoji',
+      data: {emoji, sent: false}
+    })
+  )
+}
+
+const _handleFileSubmit = (fileData) => {
+  file.value = fileData
+}
+
+const _editFinish = () => {
+  store.setState('editMessage', null)
+}
+
+let _focusUserInputHandler
+
+onMounted(() => {
+  _focusUserInputHandler = () => {
+    if (userInput.value) {
+      focusUserInput()
+    }
+  }
+  window.addEventListener('chat-focusUserInput', _focusUserInputHandler)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('chat-focusUserInput', _focusUserInputHandler)
+})
 </script>
 
 <style scoped>
@@ -313,7 +319,9 @@ export default {
   background-color: #f4f7f9;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
-  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .sc-user-input--text {

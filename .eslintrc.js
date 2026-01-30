@@ -1,15 +1,11 @@
 module.exports = {
   root: true,
   env: {
-    browser: true,
-    es2021: true,
+    'browser': true,
+    'es2021': true,
     'vue/setup-compiler-macros': true
   },
-  extends: [
-    'plugin:vue/vue3-recommended',
-    'plugin:prettier/recommended',
-    '@vue/prettier'
-  ],
+  extends: ['plugin:vue/vue3-recommended', 'plugin:prettier/recommended', '@vue/prettier'],
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
@@ -55,9 +51,13 @@ module.exports = {
     'vue/no-watch-after-await': 'error',
     'vue/prefer-import-from-vue': 'error',
     'vue/require-toggle-inside-transition': 'error',
-    'vue/v-on-event-hyphenation': ['error', 'always', {
-      autofix: true
-    }]
+    'vue/v-on-event-hyphenation': [
+      'error',
+      'always',
+      {
+        autofix: true
+      }
+    ]
   },
   parserOptions: {
     parser: '@babel/eslint-parser',

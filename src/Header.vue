@@ -13,46 +13,49 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import {ref, computed} from 'vue'
 import {mapState} from './store/'
 import CloseIcon from './assets/close-icon-big.png'
+import store from './store/'
 
-export default {
-  props: {
-    icons: {
-      type: Object,
-      default: function () {
-        return {
-          close: {
-            img: CloseIcon,
-            name: 'default'
-          }
+defineOptions({
+  name: 'ChatHeader'
+})
+
+const props = defineProps({
+  icons: {
+    type: Object,
+    default: function () {
+      return {
+        close: {
+          img: CloseIcon,
+          name: 'default'
         }
       }
-    },
-    title: {
-      type: String,
-      required: true
-    },
-    colors: {
-      type: Object,
-      required: true
     }
   },
-  data() {
-    return {
-      inUserList: false
-    }
+  title: {
+    type: String,
+    required: true
   },
-  computed: {
-    ...mapState(['disableUserListToggle', 'titleImageUrl', 'showCloseButton'])
-  },
-  methods: {
-    toggleUserList() {
-      this.inUserList = !this.inUserList
-      this.$emit('userList', this.inUserList)
-    }
+  colors: {
+    type: Object,
+    required: true
   }
+})
+
+const emit = defineEmits(['close', 'userList'])
+
+const inUserList = ref(false)
+
+const disableUserListToggle = computed(() => store.disableUserListToggle)
+const titleImageUrl = computed(() => store.titleImageUrl)
+const showCloseButton = computed(() => store.showCloseButton)
+
+const toggleUserList = () => {
+  inUserList.value = !inUserList.value
+  emit('userList', inUserList.value)
 }
 </script>
 

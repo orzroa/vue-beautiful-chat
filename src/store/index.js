@@ -3,7 +3,7 @@
  * and instantiated externally
  **/
 
-import { reactive } from 'vue'
+import {reactive} from 'vue'
 
 const store = reactive({
   editMessage: null
@@ -28,4 +28,4 @@ store.setState = setState
 store.mapState = mapState
 
 export default store
-export { mapState, setState }
+export {mapState, setState}

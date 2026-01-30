@@ -18,33 +18,29 @@
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    data: {
-      type: Object,
-      required: true
-    },
-    messageColors: {
-      type: Object,
-      required: true
-    }
+<script setup>
+import {computed} from 'vue'
+
+const props = defineProps({
+  data: {
+    type: Object,
+    required: true
   },
-  data() {
-    return {
-      imageExtension: new Set(['gif', 'jpg', 'jpeg', 'png'])
-    }
-  },
-  computed: {
-    isImage() {
-      if (this.data && this.data.file && this.data.file.url) {
-        return this.imageExtension.has(this.data.file.url.split('?')[0].split('.').pop())
-      } else {
-        return false
-      }
-    }
+  messageColors: {
+    type: Object,
+    required: true
   }
-}
+})
+
+const imageExtension = new Set(['gif', 'jpg', 'jpeg', 'png'])
+
+const isImage = computed(() => {
+  if (props.data && props.data.file && props.data.file.url) {
+    return imageExtension.has(props.data.file.url.split('?')[0].split('.').pop())
+  } else {
+    return false
+  }
+})
 </script>
 
 <style scoped>

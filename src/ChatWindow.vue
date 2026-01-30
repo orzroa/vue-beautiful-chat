@@ -1,16 +1,14 @@
 <template>
-  <div class="sc-chat-window full" :class="{opened: isOpen, closed: !isOpen}">
-    <Header
+  <div class="sc-chat-window" :class="{opened: isOpen, closed: !isOpen}">
+    <ChatHeader
       v-if="showHeader"
       :title="title"
       :colors="colors"
       @close="$emit('close')"
-      @userList="handleUserListToggle"
+      @user-list="handleUserListToggle"
     >
-      <template>
-        <slot name="header"> </slot>
-      </template>
-    </Header>
+      <slot name="header"> </slot>
+    </ChatHeader>
     <UserList v-if="showUserList" :colors="colors" :participants="participants" />
     <MessageList
       v-if="!showUserList"
@@ -20,27 +18,27 @@
       :colors="colors"
       :always-scroll-to-bottom="alwaysScrollToBottom"
       :message-styling="messageStyling"
-      @scrollToTop="$emit('scrollToTop')"
+      @scroll-to-top="$emit('scrollToTop')"
       @remove="$emit('remove', $event)"
       @resend="$emit('resend', $event)"
     >
-      <template v-slot:user-avatar="scopedProps">
+      <template #user-avatar="scopedProps">
         <slot name="user-avatar" :user="scopedProps.user" :message="scopedProps.message"> </slot>
       </template>
-      <template v-slot:text-message-body="scopedProps">
+      <template #text-message-body="scopedProps">
         <slot
           name="text-message-body"
           :message="scopedProps.message"
-          :messageText="scopedProps.messageText"
-          :messageColors="scopedProps.messageColors"
+          :message-text="scopedProps.messageText"
+          :message-colors="scopedProps.messageColors"
           :me="scopedProps.me"
         >
         </slot>
       </template>
-      <template v-slot:system-message-body="scopedProps">
+      <template #system-message-body="scopedProps">
         <slot name="system-message-body" :message="scopedProps.message"> </slot>
       </template>
-      <template v-slot:text-message-toolbox="scopedProps">
+      <template #text-message-toolbox="scopedProps">
         <slot name="text-message-toolbox" :message="scopedProps.message" :me="scopedProps.me">
         </slot>
       </template>
@@ -53,99 +51,88 @@
       :show-file="showFile"
       :placeholder="placeholder"
       :colors="colors"
-      @onType="$emit('onType')"
+      @on-type="$emit('onType')"
       @edit="$emit('edit', $event)"
     />
   </div>
 </template>
 
-<script>
-import Header from './Header.vue'
+<script setup>
+import {ref, computed} from 'vue'
+import ChatHeader from './Header.vue'
 import MessageList from './MessageList.vue'
 import UserInput from './UserInput.vue'
 import UserList from './UserList.vue'
 
-export default {
-  components: {
-    Header,
-    MessageList,
-    UserInput,
-    UserList
+const props = defineProps({
+  showEmoji: {
+    type: Boolean,
+    default: false
   },
-  props: {
-    showEmoji: {
-      type: Boolean,
-      default: false
-    },
-    showFile: {
-      type: Boolean,
-      default: false
-    },
-    showHeader: {
-      type: Boolean,
-      default: true
-    },
-    participants: {
-      type: Array,
-      required: true
-    },
-    title: {
-      type: String,
-      required: true
-    },
-    onUserInputSubmit: {
-      type: Function,
-      required: true
-    },
-    messageList: {
-      type: Array,
-      default: () => []
-    },
-    isOpen: {
-      type: Boolean,
-      default: () => false
-    },
-    placeholder: {
-      type: String,
-      required: true
-    },
-    showTypingIndicator: {
-      type: String,
-      required: true
-    },
-    colors: {
-      type: Object,
-      required: true
-    },
-    alwaysScrollToBottom: {
-      type: Boolean,
-      required: true
-    },
-    messageStyling: {
-      type: Boolean,
-      required: true
-    }
+  showFile: {
+    type: Boolean,
+    default: false
   },
-  data() {
-    return {
-      showUserList: false
-    }
+  showHeader: {
+    type: Boolean,
+    default: true
   },
-  computed: {
-    messages() {
-      let messages = this.messageList
-
-      return messages
-    }
+  participants: {
+    type: Array,
+    required: true
   },
-  methods: {
-    handleUserListToggle(showUserList) {
-      this.showUserList = showUserList
-    },
-    getSuggestions() {
-      return this.messages.length > 0 ? this.messages[this.messages.length - 1].suggestions : []
-    }
+  title: {
+    type: String,
+    required: true
+  },
+  onUserInputSubmit: {
+    type: Function,
+    required: true
+  },
+  messageList: {
+    type: Array,
+    default: () => []
+  },
+  isOpen: {
+    type: Boolean,
+    default: () => false
+  },
+  placeholder: {
+    type: String,
+    required: true
+  },
+  showTypingIndicator: {
+    type: String,
+    required: true
+  },
+  colors: {
+    type: Object,
+    required: true
+  },
+  alwaysScrollToBottom: {
+    type: Boolean,
+    required: true
+  },
+  messageStyling: {
+    type: Boolean,
+    required: true
   }
+})
+
+defineEmits(['close', 'scrollToTop', 'remove', 'resend', 'onType', 'edit'])
+
+const showUserList = ref(false)
+
+const messages = computed(() => {
+  return props.messageList
+})
+
+const handleUserListToggle = (show) => {
+  showUserList.value = show
+}
+
+const getSuggestions = () => {
+  return messages.value.length > 0 ? messages.value[messages.value.length - 1].suggestions : []
 }
 </script>
 

@@ -1,26 +1,24 @@
 <template>
   <div class="sc-message--text" :style="messageColors">
-    <template>
-      <div class="sc-message--toolbox" :style="{background: messageColors.backgroundColor}">
-        <button v-if="showEdition && me && message.id" :disabled="isEditing" @click="edit">
-          <IconBase :color="isEditing ? 'black' : messageColors.color" width="10" icon-name="edit">
-            <IconEdit />
-          </IconBase>
-        </button>
-        <button v-if="showDeletion && me && message.id" @click="$emit('remove')">
-          <IconBase :color="messageColors.color" width="10" icon-name="remove">
-            <IconCross />
-          </IconBase>
-        </button>
-        <button v-if="showCopy && me && message.id" @click="copy">
-          <IconBase :color="messageColors.color" width="10" icon-name="copy" view-box="0 0 20 20">
-            <IconCopy />
-          </IconBase>
-        </button>
-        <slot name="text-message-toolbox" :message="message" :me="me"> </slot>
-      </div>
-    </template>
-    <slot :message="message" :messageText="messageText" :messageColors="messageColors" :me="me">
+    <div class="sc-message--toolbox" :style="{background: messageColors.backgroundColor}">
+      <button v-if="showEdition && me && message.id" :disabled="isEditing" @click="edit">
+        <IconBase :color="isEditing ? 'black' : messageColors.color" width="10" icon-name="edit">
+          <IconEdit />
+        </IconBase>
+      </button>
+      <button v-if="showDeletion && me && message.id" @click="$emit('remove')">
+        <IconBase :color="messageColors.color" width="10" icon-name="remove">
+          <IconCross />
+        </IconBase>
+      </button>
+      <button v-if="showCopy && me && message.id" @click="copy">
+        <IconBase :color="messageColors.color" width="10" icon-name="copy" view-box="0 0 20 20">
+          <IconCopy />
+        </IconBase>
+      </button>
+      <slot name="text-message-toolbox" :message="message" :me="me"> </slot>
+    </div>
+    <slot :message="message" :message-text="messageText" :message-colors="messageColors" :me="me">
       <p class="sc-message--text-content" v-html="messageText"></p>
       <p v-if="message.data.meta" class="sc-message--meta" :style="{color: messageColors.color}">
         {{ message.data.meta }}
@@ -35,70 +33,67 @@
   </div>
 </template>
 
-<script>
-import {mapState} from '../store/'
+<script setup>
+import {computed} from 'vue'
+import store from '../store/'
 import IconBase from './../components/IconBase.vue'
 import IconEdit from './../components/icons/IconEdit.vue'
 import IconCross from './../components/icons/IconCross.vue'
 import IconCopy from './../components/icons/IconCopy.vue'
 import escapeGoat from 'escape-goat'
 import Autolinker from 'autolinker'
-import store from '../store/'
 
 const fmt = require('msgdown')
 
-export default {
-  components: {
-    IconBase,
-    IconCross,
-    IconEdit,
-    IconCopy
+const props = defineProps({
+  message: {
+    type: Object,
+    required: true
   },
-  props: {
-    message: {
-      type: Object,
-      required: true
-    },
-    messageColors: {
-      type: Object,
-      required: true
-    },
-    messageStyling: {
-      type: Boolean,
-      required: true
-    }
+  messageColors: {
+    type: Object,
+    required: true
   },
-  computed: {
-    messageText() {
-      const escaped = escapeGoat.escape(this.message.data.text)
-
-      return Autolinker.link(this.messageStyling ? fmt(escaped) : escaped, {
-        className: 'chatLink',
-        truncate: {length: 50, location: 'smart'}
-      })
-    },
-    me() {
-      return this.message.author === 'me'
-    },
-    isEditing() {
-      return (store.editMessage && store.editMessage.id) === this.message.id
-    },
-    ...mapState(['showDeletion', 'showEdition', 'showCopy'])
-  },
-  methods: {
-    edit() {
-      store.setState('editMessage', this.message)
-    },
-    //复制实例id
-    copy(row) {
-      let oInput = document.createElement('input')
-      oInput.value = this.message.data.text
-      document.body.appendChild(oInput)
-      oInput.select() // 选择对象
-      document.execCommand('Copy') // 执行浏览器复制命令
-      oInput.parentNode.removeChild(oInput)
-    }
+  messageStyling: {
+    type: Boolean,
+    required: true
   }
+})
+
+const emit = defineEmits(['remove'])
+
+const showDeletion = computed(() => store.showDeletion)
+const showEdition = computed(() => store.showEdition)
+const showCopy = computed(() => store.showCopy)
+
+const messageText = computed(() => {
+  const escaped = escapeGoat.escape(props.message.data.text)
+
+  return Autolinker.link(props.messageStyling ? fmt(escaped) : escaped, {
+    className: 'chatLink',
+    truncate: {length: 50, location: 'smart'}
+  })
+})
+
+const me = computed(() => {
+  return props.message.author === 'me'
+})
+
+const isEditing = computed(() => {
+  return (store.editMessage && store.editMessage.id) === props.message.id
+})
+
+const edit = () => {
+  store.setState('editMessage', props.message)
+}
+
+const copy = (row) => {
+  let oInput = document.createElement('input')
+  oInput.value = props.message.data.text
+  document.body.appendChild(oInput)
+  oInput.select()
+  document.execCommand('Copy')
+  oInput.parentNode.removeChild(oInput)
 }
 </script>
 
